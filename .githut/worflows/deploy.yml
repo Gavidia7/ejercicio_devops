@@ -12,6 +12,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Asegura que se haga un fetch completo del repositorio
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
@@ -33,4 +35,8 @@ jobs:
         echo "machine api.heroku.com login $HEROKU_EMAIL password $HEROKU_API_KEY" > ~/.netrc
         echo "machine git.heroku.com login $HEROKU_EMAIL password $HEROKU_API_KEY" >> ~/.netrc
         git remote add heroku https://git.heroku.com/$HEROKU_APP_NAME.git
+        # Verificar si el repositorio es shallow antes de ejecutar git fetch --unshallow
+        if [ -f "$(git rev-parse --git-dir)/shallow" ]; then
+          git fetch --unshallow
+        fi
         git push heroku main
