@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app",
     "dev": "nodemon app.js",
-    "test": "jest app.test.js --forceExit"
+    "test": "jest --forceExit"
   },
   "keywords": [],
   "author": "",

@@ -1,12 +1,22 @@
-const app = require("./app");
-const supertest = require("supertest");
-const request = supertest(app);
+const request = require('supertest');
+const app = require('./app');
+const http = require('http');
 
-describe("/test endpoint", () => {
-  test("Debe devolver un 'Hola Mundo'", async () => {
-    const response = await request.get("/");
-    const body = JSON.parse(response.text); 
-    expect(response.status).toBe(200);
-    expect(body.message).toBe("¡Hola mundo!");
-  });
+let server;
+
+beforeAll((done) => {
+    server = http.createServer(app);
+    server.listen(3001, done);
+});
+
+afterAll((done) => {
+    server.close(done);
+});
+
+describe('/ endpoint', () => {
+    test("Debe contener 'Home Page'", async () => {
+        const response = await request(server).get('/');
+        expect(response.status).toBe(200);
+        expect(response.text).toContain('Home Page');
+    });
 });
